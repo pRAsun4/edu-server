@@ -1,4 +1,4 @@
-import pkg from 'bcryptjs';
+import pkg from "bcryptjs";
 const { hash, compare } = pkg;
 const { sign, verify } = pkg;
 import { PrismaClient } from "@prisma/client";
@@ -6,13 +6,15 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 // JWT secret and expiration (replace `process.env.JWT_SECRET` with your secret key)
-const JWT_SECRET = process.env.JWT_SECRET || "065715acbc0f694b9ded35c78786dd5232bf733d28fddd55e25ebc9cf88aba7f";
+const JWT_SECRET =
+  process.env.JWT_SECRET ||
+  "065715acbc0f694b9ded35c78786dd5232bf733d28fddd55e25ebc9cf88aba7f";
 const JWT_EXPIRATION = "1h";
 
 // **Register a new user**
 export const register = async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
+    const { name, email, password, role, bio, avatarUrl } = req.body;
 
     // Check if user already exists
     const existingUser = await prisma.user.findUnique({
@@ -32,7 +34,16 @@ export const register = async (req, res) => {
         name,
         email,
         password: hashedPassword,
-        role, // Ensure this is validated before using
+        role,
+        profile: {
+          create: {
+            bio,
+            avatarUrl,
+          },
+        },
+      },
+      include: {
+        profile: true, 
       },
     });
 

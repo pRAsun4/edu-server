@@ -4,6 +4,6 @@ import { login, register } from "../controllers/authController.js";
 
 // Public routes
 router.post("/login", login); // User login
-router.post("/register", register); // User registration
+router.post("/signup", register); // User registration
 
 export default router;
